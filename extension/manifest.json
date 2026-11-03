@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "CleanTube — YourHome",
+  "short_name": "CleanTube",
+  "version": "0.2.0",
+  "description": "A calm YouTube home with only the channels you follow. No algorithm, no Shorts, no tracking.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Open YourHome",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "permissions": ["storage", "unlimitedStorage"],
+  "host_permissions": ["https://www.youtube.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content/youtube.js"],
+      "css": ["content/youtube.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["yourhome.html"],
+      "matches": ["https://www.youtube.com/*"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "yourhome@cleantube",
+      "strict_min_version": "121.0",
+      "data_collection_permissions": { "required": ["none"] }
+    }
+  }
+}

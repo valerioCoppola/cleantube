@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>YourHome</title>
+  <link rel="icon" href="icons/icon32.png">
+  <link rel="stylesheet" href="yourhome.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <button id="toggle-sidebar" class="icon-btn" title="Show or hide channels" aria-label="Show or hide channels">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a class="brand" href="yourhome.html" aria-label="YourHome">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.6 12 3l9 7.6V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="currentColor"/><path d="m10 9.5 5 3-5 3z" fill="var(--bg)"/></svg>
+      <span>YourHome</span>
+    </a>
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <input id="q" type="search" placeholder="Search your channels" autocomplete="off" spellcheck="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="top-actions">
+      <span id="status" class="status" aria-live="polite"></span>
+      <button id="refresh" class="icon-btn" title="Refresh" aria-label="Refresh">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.5h-4.5"/></svg>
+      </button>
+      <button id="open-settings" class="icon-btn" title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </button>
+    </div>
+    <div id="progress" class="progress" hidden><i></i></div>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Channels">
+      <nav id="channels"></nav>
+    </aside>
+    <main id="main"></main>
+  </div>
+
+  <dialog id="settings">
+    <form method="dialog" class="dialog-head">
+      <h2>Settings</h2>
+      <button class="icon-btn" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </form>
+
+    <section>
+      <h3>Feed</h3>
+      <label class="opt"><input type="checkbox" data-setting="hideShorts"><span><b>Hide Shorts</b>Only long-form videos.</span></label>
+      <label class="opt"><input type="checkbox" data-setting="hideWatched"><span><b>Hide watched videos</b>Watched ones disappear instead of fading.</span></label>
+      <label class="opt"><span><b>Show the last</b>Older videos are left out.</span>
+        <select data-setting="days" data-number>
+          <option value="7">7 days</option><option value="14">14 days</option>
+          <option value="30">30 days</option><option value="60">60 days</option>
+        </select>
+      </label>
+    </section>
+
+    <section>
+      <h3>Layout</h3>
+      <label class="opt"><span><b>Card size</b>Smaller cards fit more on screen.</span>
+        <select data-setting="cardSize">
+          <option value="s">Small</option><option value="m">Medium</option><option value="l">Large</option>
+        </select>
+      </label>
+      <label class="opt"><span><b>Videos per channel</b>In each section; extra uploads fold into “+N more”.</span>
+        <select data-setting="perChannel" data-number>
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="0">Show all</option>
+        </select>
+      </label>
+      <label class="opt"><input type="checkbox" data-setting="newTab"><span><b>Open videos in a new tab</b>YourHome stays open where you left it.</span></label>
+    </section>
+
+    <section>
+      <h3>On youtube.com</h3>
+      <label class="opt"><input type="checkbox" data-setting="replaceHome"><span><b>Open YourHome instead of the YouTube home page</b>To see the original once, use youtube.com/?yourhome-off</span></label>
+      <label class="opt"><input type="checkbox" data-setting="hideRecs"><span><b>Hide recommendations next to videos</b>Also hides the suggestion grid when a video ends.</span></label>
+    </section>
+
+    <section>
+      <h3>Channels</h3>
+      <div data-slot="adders"></div>
+    </section>
+
+    <section>
+      <h3>Backup</h3>
+      <p class="muted">Your channels and settings, as a file you can import in any browser.</p>
+      <div class="row">
+        <button class="btn" data-action="export">Export backup</button>
+      </div>
+    </section>
+
+    <p class="fine">CleanTube is open source. No account, no server, no tracking: everything stays in this browser. Videos come from YouTube’s public feeds, which list each channel’s 15 most recent uploads.</p>
+  </dialog>
+
+  <dialog id="group-editor" class="group-editor">
+    <form method="dialog" class="dialog-head">
+      <h2 id="ge-title">New group</h2>
+      <button class="icon-btn" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </form>
+    <label class="field"><span>Name</span><input id="ge-name" type="text" placeholder="News, Music, Learning…" autocomplete="off" maxlength="40"></label>
+    <label class="field"><span>Channels</span><input id="ge-filter" type="search" placeholder="Filter channels" autocomplete="off"></label>
+    <div id="ge-list" class="check-list"></div>
+    <div class="dialog-foot">
+      <button id="ge-delete" class="btn quiet">Delete group</button>
+      <span id="ge-count" class="muted"></span>
+      <button id="ge-save" class="btn primary">Save</button>
+    </div>
+  </dialog>
+
+  <template id="adders-tpl">
+    <div class="adders">
+      <div class="adder">
+        <div><b>Import from YouTube</b><span>Reads the channels you subscribe to, using your YouTube sign-in in this browser.</span></div>
+        <button class="btn primary" data-action="import-youtube">Import</button>
+      </div>
+      <div class="adder">
+        <div><b>Import a file</b><span>Google Takeout <code>subscriptions.csv</code>, OPML, NewPipe, FreeTube, or a YourHome backup.</span></div>
+        <label class="btn">Choose file<input type="file" data-action="import-file" accept=".csv,.opml,.xml,.json,.db,.txt" hidden></label>
+      </div>
+      <form class="adder add-one" data-action="add-one">
+        <div><b>Add a channel</b><span>Paste a channel link, an @handle, or a link to any of its videos.</span></div>
+        <div class="add-row">
+          <input name="q" type="text" placeholder="@channel or youtube.com/…" autocomplete="off" spellcheck="false">
+          <button class="btn">Add</button>
+        </div>
+        <output></output>
+      </form>
+    </div>
+  </template>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

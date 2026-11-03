@@ -1,0 +1,33 @@
+/* Only active when "Hide recommendations" is on (class set by youtube.js). */
+html.yourhome-hide-recs #related,
+html.yourhome-hide-recs ytd-watch-next-secondary-results-renderer,
+html.yourhome-hide-recs .ytp-endscreen-content,
+html.yourhome-hide-recs .ytp-autonav-endscreen-countdown-overlay {
+  display: none !important;
+}
+
+.yourhome-import {
+  position: fixed;
+  inset: auto 24px 24px auto;
+  z-index: 2147483647;
+  width: min(360px, calc(100vw - 48px));
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: #1c1b19;
+  color: #f4f1ea;
+  font: 14px/1.5 system-ui, sans-serif;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.35);
+}
+.yourhome-import strong { font-size: 15px; }
+.yourhome-import p { margin: 6px 0 0; }
+.yourhome-import div:not(:empty) { margin-top: 12px; }
+.yourhome-import button {
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #f4f1ea;
+  color: #1c1b19;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
